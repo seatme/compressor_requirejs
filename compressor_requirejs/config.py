@@ -12,10 +12,6 @@ class LazySettings(object):
         return getattr(django_settings, "COMPRESSOR_REQUIREJS_R_JS", join(THIS_PATH, join('resources', 'r.js')))
 
     @property
-    def COMPRESSOR_REQUIREJS_TMP(self):
-        return getattr(django_settings, "COMPRESSOR_REQUIREJS_TMP", join(THIS_PATH, 'tmp'))
-
-    @property
     def COMPRESSOR_REQUIREJS_GLOBAL_CONFIG(self):
         return getattr(django_settings, "COMPRESSOR_REQUIREJS_GLOBAL_CONFIG", None)
 

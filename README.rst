@@ -52,16 +52,12 @@ Installation
 
    -  Set ``COMPRESS_PRECOMPILERS`` of django compressor for using with
       standard markup in compress tags
-   -  Set ``COMPRESSOR_REQUIREJS_TMP`` to a custom **existing**
-      temporary directory path
 
 .. code:: python
 
     COMPRESS_PRECOMPILERS = (
         ('text/requirejs', 'compressor_requirejs.compressor.r_precompiler.RequireJSPrecompiler'),
     )
-
-    COMPRESSOR_REQUIREJS_TMP = django_project_path_join('tmp')
 
 Advanced configuration
 ======================
@@ -71,12 +67,9 @@ Advanced configuration
 
         #COMPRESSOR_REQUIREJS config
 
-        #absolute path to r.js
-        #default: path in resources of this package
+        # Absolute path to r.js
+        # Default: path to the local copy in this compressor_requirejs package
         COMPRESSOR_REQUIREJS_R_JS = 'path/to/r.js'
-
-        #absolute path to temporary directory
-        COMPRESSOR_REQUIREJS_TMP = '/tmp'
 
         # Path to the global build configuration for RequireJS (the
         # "mainConfigFile" in r.js optimization configuration). The path should
