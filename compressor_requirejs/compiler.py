@@ -1,10 +1,8 @@
 import codecs
 import subprocess
-import os
 import tempfile
 
 from django.core.exceptions import ImproperlyConfigured
-from django.contrib.staticfiles import finders
 
 from .config import settings
 
@@ -12,70 +10,59 @@ from .config import settings
 APP_NAME = 'compressor_requirejs'
 
 
-class CompressorRequireJSException(Exception):
+class RequireJSCompilerException(Exception):
     pass
 
 
 class RequireJSCompiler(object):
+    """
+    A compiler that runs the r.js optimizer on a build config for a single file.
+    """
     def __init__(self):
         self.rjs = getattr(settings, 'COMPRESSOR_REQUIREJS_R_JS', None)
         if not self.rjs:
             raise ImproperlyConfigured('COMPRESSOR_REQUIREJS_R_JS not set')
 
-    def get_fullpath(self, path, resolve_path=True):
-        if os.path.isabs(path):
-            return path
-        if not resolve_path:
-            return path
-        files = finders.find(path, all=True)
-        if isinstance(files, list):
-            if len(files) > 0:
-                return files[0]
-            else:
-                return path
-        elif files is not None:
-            return files
-        else:
-            return path
+    def requirejs(self, build_filename, config_path=None, paths=None,
+                  charset='utf-8'):
+        """
+        Returns a string of the compiled JS for the given build file.
 
-    def required_libs(self):
-        paths = []
-        if hasattr(settings, 'COMPRESSOR_REQUIREJS_REQUIRED_LIBS'):
-            for arg in settings.COMPRESSOR_REQUIREJS_REQUIRED_LIBS.keys():
-                path = self.get_fullpath(settings.COMPRESSOR_REQUIREJS_REQUIRED_LIBS[arg])
-                if path.endswith('.js'):
-                    path = path[:-3]
-                paths.append('paths.%s=%s' % (arg, path))
-        return paths
-
-    def requirejs(self, filename, resolve_path=True, include_tags=True):
-        libs = self.required_libs()
-        global_config = getattr(settings, 'COMPRESSOR_REQUIREJS_GLOBAL_CONFIG', None)
+        Args:
+            - build_filename - The full file path of the build file to use.
+            - config_path - (optional) The full file path of the main
+                config file to use for this build (see requireJS mainConfigFile)
+            - paths - (optional) List of command line path arguments to pass to
+                the r.js optimizer
+            - charset - The charset to use for reading the output JS
+        """
         outfile = tempfile.NamedTemporaryFile()
-        build_filename = self.get_fullpath(filename, resolve_path)
 
         process_args = [
             settings.COMPRESSOR_REQUIREJS_ENVIORNMENT_EXECUTABLE,
             self.rjs,
             '-o',
             build_filename,
-            'out=' + outfile.name
-        ] + libs
+            'out=%s' % outfile.name
+        ]
 
-        if global_config:
-            process_args.append('mainConfigFile=' + self.get_fullpath(global_config))
+        if paths is not None:
+            process_args += paths
+
+        if config_path:
+            process_args.append('mainConfigFile=%s' % config_path)
 
         try:
             output = subprocess.check_output(process_args)
         except Exception as e:
-            raise CompressorRequireJSException(e)
+            raise RequireJSCompilerException(e)
 
         if 'Error' in output:
-            raise CompressorRequireJSException(output)
+            raise RequireJSCompilerException(output)
 
-        with codecs.open(outfile.name, 'r', 'utf-8') as f:
-            ret = '<script>%s</script>' % f.read() if include_tags else f.read()
+        with codecs.open(outfile.name, 'r', charset) as f:
+            compiled_js = f.read()
 
         outfile.close()
 
-        return ret
+        return compiled_js
