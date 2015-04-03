@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-from __future__ import with_statement
+from compressor.filters.base import FilterBase
+
 from compressor_requirejs.compiler import RequireJSCompiler
 
 
-class RequireJSPrecompiler(object):
-    """A filter whose output is always the string 'OUTPUT' """
+class RequireJSPrecompiler(FilterBase):
 
-    def __init__(self, content, attrs, filter_type=None, charset=None, filename=None):
+    def __init__(self, content, attrs=None, filter_type=None, charset=None, filename=None):
         self.content = content
         self.attrs = attrs
         self.filter_type = filter_type

@@ -174,11 +174,3 @@ LOGGING = {
         }
     },
 }
-
-
-def logging_compressor_requirejs(text):
-    import logging
-    logger = logging.getLogger('mainapp.custom')
-    logger.debug(text)
-
-COMPRESSOR_REQUIREJS_LOGGING_OUTPUT_FUNCTION = logging_compressor_requirejs

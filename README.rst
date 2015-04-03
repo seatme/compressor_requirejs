@@ -52,22 +52,10 @@ Installation
 
    -  Set ``COMPRESS_PRECOMPILERS`` of django compressor for using with
       standard markup in compress tags
-   -  Set ``CACHE`` backends for django compressor and requirejs plugin,
-      recomended for development is ``'default'`` with ``DummyCache``
-      and ``'locmem'`` with ``LocMemCache``
    -  Set ``COMPRESSOR_REQUIREJS_TMP`` to a custom **existing**
       temporary directory path
 
 .. code:: python
-
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.dummy.DummyCache'
-        },
-        'locmem': {
-            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-        }
-    }
 
     COMPRESS_PRECOMPILERS = (
         ('text/requirejs', 'compressor_requirejs.compressor.r_precompiler.RequireJSPrecompiler'),
@@ -90,30 +78,15 @@ Advanced configuration
         #absolute path to temporary directory
         COMPRESSOR_REQUIREJS_TMP = '/tmp'
 
-        #path to global configuration for requirejs bulid aka 'mainConfigFile' in r.js configuration
-        # WARNING setting this path overwrites built in global config of this plugin and some feature can not working
+        # Path to the global build configuration for RequireJS (the
+        # "mainConfigFile" in r.js optimization configuration). The path should
+        # be relative to STATIC_ROOT
         COMPRESSOR_REQUIREJS_GLOBAL_CONFIG = 'path/to/global/requirejs/config.js'
 
-        #setup compressor_requirejs caching backend, preferred local memory backend mainly for development,
-        #backend should be configured in django CACHE configuration
-        #default: 'locmem'
-        COMPRESSOR_REQUIREJS_CACHE_BACKEND = 'locmem'
-
-        #timeout for caching results in cache (in seconds)
-        #default: 3600
-        COMPRESSOR_REQUIREJS_CACHE_TIMEOUT = 3600
-
-        #node js executable path, it is preferred to have mapped 'node' in your PATH
-        #default: node
-        COMPRESSOR_REQUIREJS_NODE_EXECUTABLE = 'node'
-
-        #setup custom logging function for output
-        def logging_compressor_requirejs(text):
-            import logging
-            logger = logging.getLogger('mainapp.custom')
-            logger.debug(text)
-
-        COMPRESSOR_REQUIREJS_LOGGING_OUTPUT_FUNCTION = logging_compressor_requirejs
+        # Executable path for running the r.js optimization. It is preferred to
+        # have 'node' on your PATH
+        # default: node
+        COMPRESSOR_REQUIREJS_ENVIORNMENT_EXECUTABLE = 'node'
 
 
 Using
@@ -160,29 +133,6 @@ Of course you have to include ``require.js`` file, ex:
     {% compress js %}
         <script src="{{ STATIC_URL }}mainapp/js/require.js"></script>
     {% endcompress %}
-
-Advanced features
-=================
-
-You can use django template language tags in your js files. It can be
-processed with django compressor's template processors but there is a
-hack to omit this markup during requirejs compilation.
-
-.. code:: javascript
-
-    //>startExclusion
-    var importantVariableExcludedDuringCompilationButVisibleInRenderedFile = {{ PROJECT_VARIABLE }};
-    //>endExclusion
-
-Those tags are used to exclude fragment of code (commenting it) during
-requirejs compilation, and after compilation it will be available, and
-can be processed by django compressor.
-
-Also you can use tags in string without above markup:
-
-.. code:: javascript
-
-    var x = '{{ STATIC_URL }}/path/';
 
 
 Global js library mappings
