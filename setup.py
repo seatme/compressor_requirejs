@@ -17,14 +17,14 @@ setup(
             "resources/*.js"
         ]
     },
-    version='1.3',
+    version='2.0',
     license='GNU AGPLv3',
     description='Library for django compressor, which helps to build requirejs',
     long_description=read('README.rst'),
     author='Andrzej Przybyszewski',
     author_email='mcendrju@gmail.com',
     url='https://github.com/dresiu/compressor_requirejs',
-    download_url='https://github.com/dresiu/compressor_requirejs/tarball/1.3',
+    download_url='https://github.com/dresiu/compressor_requirejs/tarball/2.0',
     keywords=['compressor_requirejs', 'django_compressor', 'django', 'compressor', 'requirejs', 'r.js'],
     requires=['django_compressor'],
     install_requires=['django-compressor>=1.3'],

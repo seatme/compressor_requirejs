@@ -1,19 +1,36 @@
 Changelog
 =========
 
-### v1.3
+### 2.0
+Features:
+* Use COMPRESSOR_REQUIREJS_GLOBAL_CONFIG option for specifying a global
+  configuration (no longer COMPRESSOR_REQUIREJS_GLOBAL_PRECONFIG)
+* Support for using raw "main" JS files (ignoring the build file) when
+  `COMPRESS_ENABLED` is `False`.
+
+Backward incompatible changes:
+* Remove logic for including Django template language tags in your JS files.
+  This simplifies configuration and eliminates the PyExecJs dependency.
+* Remove the COMPRESSOR_REQUIREJS_TMP setting and the associated internal temp
+  file logic
+* Remove cache configuration (COMPRESSOR_REQUIREJS_CACHE_BACKEND,
+  COMPRESSOR_REQUIREJS_CACHE_TIMEOUT)
+* Remove custom cache code and logic
+* Remove custom logging configuration
+
+### 1.3
 * install_requires command added
 * support for django-compressor 1.4 precompiler constructor
 
-### v1.2
+### 1.2
 * invalidate cache on compiling error
 * support for custom logging
 
-### v1.1.1
+### 1.1.1
 * fixed setup file
 
-### v1.1
+### 1.1
 * required libs support
 
-### v1.0
+### 1.0
 * initial version
