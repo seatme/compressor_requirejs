@@ -128,6 +128,54 @@ the order of files and the rollup of those files (e.g., including requirejs and
 your built file inside the same ``compress`` block).
 
 
+Adding configuration per-page
+-----------------------------
+To add RequireJS configuration on a given page, there are a couple options using
+built-in RequireJS constructs. This is useful for including Django context
+variables into your require config (e.g., static URL path, per-user data, etc.).
+Briefly, the options are:
+
+Call ``require.config`` with your configuration options after include the
+require.js script:
+
+::
+
+    <script src="{{ STATIC_URL }}mainapp/js/require.js"></script>
+    <script>
+      require.config({
+        baseUrl: "{{ STATIC_URL }}another/path",
+        paths: {
+          "some": "some/v1.0"
+        },
+        waitSeconds: 15
+      });
+    </script>
+
+
+Create a JS object named ``require`` with your configuration options before
+including the require.js script:
+
+::
+
+    <script>
+      var require = {
+        baseUrl: "{{ STATIC_URL }}another/path",
+        paths: {
+          "some": "some/v1.0"
+        },
+        waitSeconds: 15
+      };
+    </script>
+    <script src="{{ STATIC_URL }}mainapp/js/require.js"></script>
+
+For more details on adding RequireJS config generally, see: http://requirejs.org/docs/api.html#config
+
+This template-level dynamic configuration works especially well with the
+RequireJS module config, which allows you to effectively pass data into your
+Require modules. For more details on the module config, see:
+http://requirejs.org/docs/api.html#config-moduleconfig
+
+
 Global configuration for r.js builds
 ------------------------------------
 Use the ``COMPRESSOR_REQUIREJS_GLOBAL_CONFIG`` option for specifying which
