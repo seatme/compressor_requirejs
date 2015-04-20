@@ -9,6 +9,8 @@ Features:
   `COMPRESS_ENABLED` is `False`.
 
 Backward incompatible changes:
+* Change path to the Django Compressor precompiler. Now located at
+  'compressor_requirejs.filters.RequireJSPrecompiler'
 * Remove logic for including Django template language tags in your JS files.
   This simplifies configuration and eliminates the PyExecJs dependency.
 * Remove the COMPRESSOR_REQUIREJS_TMP setting and the associated internal temp
