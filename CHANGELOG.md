@@ -1,6 +1,9 @@
 Changelog
 =========
 
+### 2.0.1
+* Update require.js and r.js to version 2.1.17 (newest version)
+
 ### 2.0
 Features:
 * Use COMPRESSOR_REQUIREJS_GLOBAL_CONFIG option for specifying a global
